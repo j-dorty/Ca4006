@@ -1,0 +1,193 @@
+Mission Controller received request to increment stage from mission with mission ID 0
+Mission Controller received request to increment stage from mission with mission ID 1
+
+***MISSION INCREMENTED STAGE***
+MISSION_0***IS_CHANGING_TO_STAGE Interplanetary transit stage
+
+***MISSION INCREMENTED STAGE***
+MISSION_1***IS_CHANGING_TO_STAGE Interplanetary transit stage
+Mission Controller received request to increment stage from mission with mission ID 3
+Mission Controller received request to increment stage from mission with mission ID 2
+
+***MISSION INCREMENTED STAGE***
+MISSION_3***IS_CHANGING_TO_STAGE Interplanetary transit stage
+
+***MISSION INCREMENTED STAGE***
+MISSION_2***IS_CHANGING_TO_STAGE Interplanetary transit stage
+Mission Controller received request to increment stage from mission with mission ID 9
+Mission Controller received request to increment stage from mission with mission ID 8
+
+***MISSION INCREMENTED STAGE***
+MISSION_9***IS_CHANGING_TO_STAGE Interplanetary transit stage
+
+***MISSION INCREMENTED STAGE***
+MISSION_8***IS_CHANGING_TO_STAGE Interplanetary transit stage
+Mission Controller received request to increment stage from mission with mission ID 7
+Mission Controller received request to increment stage from mission with mission ID 6
+
+***MISSION INCREMENTED STAGE***
+MISSION_7***IS_CHANGING_TO_STAGE Interplanetary transit stage
+Mission Controller received request to increment stage from mission with mission ID 5
+Mission Controller received request to increment stage from mission with mission ID 4
+
+***MISSION INCREMENTED STAGE***
+MISSION_5***IS_CHANGING_TO_STAGE Interplanetary transit stage
+
+***MISSION INCREMENTED STAGE***
+MISSION_4***IS_CHANGING_TO_STAGE Interplanetary transit stage
+Mission Controller received request to increment stage from mission with mission ID 0
+Mission Controller received request to increment stage from mission with mission ID 1
+
+***MISSION INCREMENTED STAGE***
+MISSION_0***IS_CHANGING_TO_STAGE entry/landing stage 
+
+***MISSION INCREMENTED STAGE***
+MISSION_1***IS_CHANGING_TO_STAGE entry/landing stage 
+Mission Controller received request to increment stage from mission with mission ID 3
+Mission Controller received request to increment stage from mission with mission ID 2
+
+***MISSION INCREMENTED STAGE***
+MISSION_3***IS_CHANGING_TO_STAGE entry/landing stage 
+Mission Controller received request to increment stage from mission with mission ID 9
+Mission Controller received request to increment stage from mission with mission ID 8
+
+***MISSION INCREMENTED STAGE***
+MISSION_2***IS_CHANGING_TO_STAGE entry/landing stage 
+Mission Controller received request to increment stage from mission with mission ID 7
+Mission Controller received request to increment stage from mission with mission ID 6
+
+Mission Controller received message from mission with mission Id 6 that it attempted to increment its stage but failed
+
+***MISSION INCREMENTED STAGE***
+MISSION_9***IS_CHANGING_TO_STAGE entry/landing stage 
+
+***MISSION INCREMENTED STAGE***
+MISSION_7***IS_CHANGING_TO_STAGE entry/landing stage 
+
+***MISSION INCREMENTED STAGE***
+MISSION_6***IS_CHANGING_TO_STAGE Interplanetary transit stage
+Mission Controller received request to increment stage from mission with mission ID 5
+Mission Controller received request to increment stage from mission with mission ID 4
+
+***MISSION INCREMENTED STAGE***
+MISSION_5***IS_CHANGING_TO_STAGE entry/landing stage 
+Mission Controller received request to increment stage from mission with mission ID 0
+Mission Controller received request to increment stage from mission with mission ID 1
+
+***MISSION INCREMENTED STAGE***
+MISSION_4***IS_CHANGING_TO_STAGE entry/landing stage 
+Mission Controller received request to increment stage from mission with mission ID 3
+Mission Controller received request to increment stage from mission with mission ID 2
+
+***MISSION INCREMENTED STAGE***
+MISSION_0***IS_CHANGING_TO_STAGE exploration (rover) stage
+
+***MISSION INCREMENTED STAGE***
+MISSION_1***IS_CHANGING_TO_STAGE exploration (rover) stage
+Mission Controller received request to increment stage from mission with mission ID 9
+Mission Controller received request to increment stage from mission with mission ID 8
+
+Mission Controller received message from mission with mission Id 8 that it attempted to increment its stage but failed
+
+***MISSION INCREMENTED STAGE***
+MISSION_3***IS_CHANGING_TO_STAGE exploration (rover) stage
+Mission Controller received request to increment stage from mission with mission ID 7
+Mission Controller received request to increment stage from mission with mission ID 6
+
+***MISSION INCREMENTED STAGE***
+MISSION_2***IS_CHANGING_TO_STAGE exploration (rover) stage
+Mission Controller received request to increment stage from mission with mission ID 5
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 0 that mission has completed final stage and ended
+
+***MISSION INCREMENTED STAGE***
+MISSION_9***IS_CHANGING_TO_STAGE exploration (rover) stage
+
+***MISSION INCREMENTED STAGE***
+MISSION_7***IS_CHANGING_TO_STAGE exploration (rover) stage
+
+***MISSION INCREMENTED STAGE***
+MISSION_6***IS_CHANGING_TO_STAGE entry/landing stage 
+Mission Controller received request to increment stage from mission with mission ID 4
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 1 that mission has completed final stage and ended
+
+***MISSION INCREMENTED STAGE***
+MISSION_5***IS_CHANGING_TO_STAGE exploration (rover) stage
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 3 that mission has completed final stage and ended
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 2 that mission has completed final stage and ended
+
+***MISSION INCREMENTED STAGE***
+MISSION_4***IS_CHANGING_TO_STAGE exploration (rover) stage
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 9 that mission has completed final stage and ended
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 7 that mission has completed final stage and ended
+Mission Controller received request to increment stage from mission with mission ID 8
+
+Mission Controller received message from mission with mission Id 8 that it attempted to increment its stage but failed
+Mission Controller received request to increment stage from mission with mission ID 6
+
+***MISSION INCREMENTED STAGE***
+MISSION_8***IS_CHANGING_TO_STAGE entry/landing stage 
+
+***MISSION INCREMENTED STAGE***
+MISSION_6***IS_CHANGING_TO_STAGE exploration (rover) stage
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 5 that mission has completed final stage and ended
+
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 4 that mission has completed final stage and ended
+
+*****COMPONENT REPORT*****
+
+Mission Controller received Component report from Mission with mission ID 6
+Report: Report Component Report 6 thrusters with size 0 is reporting with status ready
+*****COMPONENT REPORT*****
+
+Mission Controller received Component report from Mission with mission ID 6
+Report: Report Component Report 6 instruments with size 1 is reporting with status ready
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 6 that mission has completed final stage and ended
+Mission Controller received request to increment stage from mission with mission ID 8
+
+*****COMPONENT REPORT*****
+
+Mission Controller received Component report from Mission with mission ID 8
+Report: Report Component Report 8 controlSystems with size 1 is reporting with status readyMission Controller received request to increment stage from mission with mission ID 8
+
+Mission Controller received message from mission with mission Id 8 that it attempted to increment its stage but failed
+
+***MISSION INCREMENTED STAGE***
+MISSION_8***IS_CHANGING_TO_STAGE exploration (rover) stage
+
+*****COMPONENT REPORT*****
+
+Mission Controller received Component report from Mission with mission ID 8
+Report: Report Component Report 8 controlSystems with size 1 is reporting with status ready
+*****COMPONENT REPORT*****
+
+Mission Controller received Component report from Mission with mission ID 8
+Report: Report Component Report 8 powerPlants with size 0 is reporting with status ready
+*****ENDED MISSION*****
+
+Mission controller received message from mission with mission ID 8 that mission has completed final stage and ended
+ALL MISSION SUCCESSFULLY COMPLETED FINAL STAGE ***ENDING***
