@@ -23,23 +23,19 @@ import java.io.File ;
 public class StoreSystem extends UnicastRemoteObject implements StoreInterface, Serializable {
   
   String ma = "";
-  Hashtable <String,String> metadata ;
   private static final long serialVersionUID = 24L;
   private String fileName = "store_inventory.txt" ;
   transient BufferedReader br ;
   int ran = 1 ;
   File file ;
-  // Hashtable <String, LinkedList<String>> chunked ;
   char start ;
   char end ;
-  // String chunkName ;
-  private Queue<String> orderQueue = new LinkedList<>();
-  private Queue<String> availabilityQueue = new LinkedList<>();
+
 
 
   public StoreSystem() throws RemoteException, Exception {
     super();
-    file = new file(fileName);
+    file = new File(fileName);
   }
 
   public synchronized void placeOrder(String order) throws RemoteException, Exception {
@@ -49,8 +45,6 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
     String orderedQuantity = orderAsList[orderAsList.length - 3]; //.get(orderAsList.length - 3);
     String orderDate = orderAsList[orderAsList.length - 2];
     String orderTime = orderAsList[orderAsList.length - 1]; 
-    File space = new File("/home");
-    String fname;
     FileReader fileReader = new FileReader("store_inventory.txt");
     BufferedReader bufferedReader = new BufferedReader(fileReader);
     // Scanner scan = new Scanner("store_inventory.txt");
@@ -63,10 +57,10 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
     String line = bufferedReader.readLine();
     try {
       while(line != null) {
-        inventoryEntry = line.split(" ");
+        String[] inventoryEntry = line.split(" ");
 
-        inventoryProduct = String.join(" ", Arrays.copyOfRange(inventoryEntry, 0, inventoryEntry.length - 3));
-        if (orderedProduct == inventoryProduct) {
+        String inventoryProduct = String.join(" ", Arrays.copyOfRange(inventoryEntry, 0, inventoryEntry.length - 3));
+        if (orderedProduct.equals(inventoryProduct)) {
           if (orderCanBeCompleted(orderedProduct, orderedQuantity, orderDate, orderTime)) {
             confirmOrder(orderedProduct, orderedQuantity, orderDate, orderTime);
           }
@@ -83,90 +77,142 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
   }
 
   public synchronized void listOrders(String userId) { 
+    try {
     FileReader fileReader = new FileReader("current_orders.txt");
     BufferedReader bufferedReader = new BufferedReader(fileReader);
     
     String currentOrder = bufferedReader.readLine();
-    try {
-      while(currentOrder != null) {
-        currentOrderList = line.split(" ");
 
-        customerId = currentOrderList[0];
-        if (customerId == userId) {
+      while(currentOrder != null) {
+        String[] currentOrderList = currentOrder.split(" ");
+
+        String customerId = currentOrderList[0];
+        if (customerId.equals(userId)) {
           System.out.println(currentOrder);
         }
       }
-    } catch(FileNotFoundException e) {
+      bufferedReader.close();
+    } catch(IOException e) {
       e.printStackTrace();
     }
-    bufferedReader.close();
   }
 
   public synchronized void checkProductAvailability(String productName, LocalDate checkDate) {
-    LocalDate currentDate = LocalDate.now(); //2017-01-03
-    int daysBetweenDates = currentDate.until(checkDate, ChronoUnit.DAYS);
-    int numberOfRestocks = daysBetweenDates % 30; // 1
-    int daysRemaining = daysBetweenDates / 30; // 10
-
-    FileReader fileReader = new FileReader("store_inventory.txt");
-    BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-    String line = bufferedReader.readLine();
-
-    String productInfo;
     try {
-      while(line != null) {
-        inventoryEntry = line.split(" ");
+      LocalDate currentDate = LocalDate.now(); //2017-01-03
+      long daysBetweenDates = currentDate.until(checkDate, ChronoUnit.DAYS);
+      long numberOfRestocks = daysBetweenDates % 30; // 1
+      long daysRemaining = daysBetweenDates / 30; // 10
 
-        inventoryProduct = String.join(" ", Arrays.copyOfRange(inventoryEntry, 0, inventoryEntry.length - 3));
-        if(inventoryProduct == productName) {
+      FileReader fileReader = new FileReader("store_inventory.txt");
+      BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+      String line = bufferedReader.readLine();
+
+      String[] productInfo = {"", "", "", ""};
+
+      while(line != null) {
+        String[] inventoryEntry = line.split(" ");
+
+        String inventoryProduct = String.join(" ", Arrays.copyOfRange(inventoryEntry, 0, inventoryEntry.length - 3));
+        if(inventoryProduct.equals(productName)) {
           productInfo = inventoryEntry;
           break;
         }
       }
-    } catch(Exception e) {
+
+      bufferedReader.close();
+
+      String restockQuanity = productInfo[productInfo.length - 1];
+      String restockDate = productInfo[productInfo.length - 2];
+      String currentQuantity = productInfo[productInfo.length - 3];
+
+      int currentDay = currentDate.getDayOfMonth();
+      if(currentDay < Integer.parseInt(restockDate)) {
+        long checkDay = currentDay + daysRemaining;
+        if(checkDay > Integer.parseInt(restockDate)) {
+          numberOfRestocks++;
+        }
+      }
+
+      long futureQuantityWithNoOrders = Integer.parseInt(currentQuantity) + (Integer.parseInt(restockQuanity) * numberOfRestocks);
+
+          
+      FileReader orderFileReader = new FileReader("current_orders.txt");
+      BufferedReader orderBufferedReader = new BufferedReader(orderFileReader);
+
+      String currentOrder = orderBufferedReader.readLine();
+
+      long totalOrderedAmount = 0;
+      while(currentOrder != null) {
+        String[] currentOrderList = currentOrder.split(" ");
+
+        String orderedProduct = String.join(" ", Arrays.copyOfRange(currentOrderList, 1, currentOrderList.length - 3));
+        String orderedQuanity = currentOrderList[-2];
+        if(orderedProduct.equals(productName)) {
+          totalOrderedAmount += Integer.parseInt(orderedQuanity);
+        }
+
+
+        currentOrder = orderBufferedReader.readLine();
+      }
+      orderBufferedReader.close();
+
+      long predictedFutureQuantityWithOrders = futureQuantityWithNoOrders - totalOrderedAmount;
+
+      System.out.println("The predicted amount of product: " + productName + " on " + checkDate + " is " + predictedFutureQuantityWithOrders);
+      
+    } catch(IOException e) {
       e.printStackTrace();
     }
-
-    String restockQuanity = inventoryEntry[inventoryEntry.length - 1];
-    String restockDate = inventoryEntry[inventoryEntry.length - 2];
-    String currentQuantity = inventoryEntry[inventoryEntry.length - 3];
-
-    currentDay = currentDate.getDayOfMonth();
-    if(currentDay < parseInt(restockDate)) {
-      checkDay = currentDay + daysRemaining;
-      if(checkDay > parseInt(restockDate)) {
-        numberOfRestocks ++;
-      }
-    }
-
-    int futureQuantityWithNoOrders = parseInt(currentQuantity) + (parseInt(restockQuanity) * numberofRestocks);
-    
-    FileReader ordferFileReader = new FileReader("current_orders.txt");
-    BufferedReader orderBufferedReader = new BufferedReader(fileReader);
-
-    String currentOrder = orderBufferedReader.readLine();
 
   }
 
 
+  public synchronized void checkAllProductSixMonthAvailability() {
+    try {
+      LocalDate currentDate = LocalDate.now(); //2017-01-03
+      LocalDate sixMonthsFromNow = currentDate.plusMonths(6);
+      FileReader fileReader = new FileReader("store_inventory.txt");
+      BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+      String line = bufferedReader.readLine();
+      while(line != null) {
+        String[] inventoryEntry = line.split(" ");
+
+        String inventoryProduct = String.join(" ", Arrays.copyOfRange(inventoryEntry, 0, inventoryEntry.length - 3));
+
+        checkProductAvailability(inventoryProduct,sixMonthsFromNow);
+
+        line = bufferedReader.readLine();
+
+      }
+
+      bufferedReader.close();
+
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+  }
+
   // userId OrderID orderredproduct qauntity date ....
   // 1 35 game boy....
   public synchronized void cancelOrder(String userId, String orderIdTobeCancelled) {
-    ArrayList<String> ordersNotToBecCancelled;
-
-    FileReader fileReader = new FileReader("current_orders.txt");
-    BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-    String currentOrder = bufferedReader.readLine();
-
     try {
-      while(currentOrder != null) {
-        currentOrderList = line.split(" ");
+      ArrayList<String> ordersNotToBecCancelled = new ArrayList<String>();
 
-        customerId = currentOrderList[0];
-        orderId = currentOrderList[1];
-        if(!(customerId == userId && orderId == orderIdTobeCancelled)) {
+      FileReader fileReader = new FileReader("current_orders.txt");
+      BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+      String currentOrder = bufferedReader.readLine();
+
+
+      while(currentOrder != null) {
+        String[] currentOrderList = currentOrder.split(" ");
+
+        String customerId = currentOrderList[0];
+        String orderId = currentOrderList[1];
+        if(!(customerId.equals(userId) && orderId.equals(orderIdTobeCancelled))) {
           ordersNotToBecCancelled.add(currentOrder);
         }
 

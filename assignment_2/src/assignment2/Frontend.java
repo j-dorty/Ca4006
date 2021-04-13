@@ -6,6 +6,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Queue;
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.List;
+
 
 enum State
 {
@@ -15,6 +19,8 @@ enum State
 public class Frontend {
 
     private Scanner scanner;
+    private StoreInterface store;
+    private State STATE;
   
   public static void main(String[] args) throws RemoteException, 
   NotBoundException, MalformedURLException, ParseException , Exception{
@@ -33,9 +39,18 @@ public class Frontend {
     this.scanner = new Scanner(System.in);
   }
 
+  private int chooseOne(List<String> options)
+    {
+        for (int i = 0; i < options.size(); i++)
+            System.out.println(String.format("%10d. %s", i+1, options.get(i).toString()));
+        System.out.print("\n\n\tCHOICE: ");
+        int choice = scanner.nextInt();
+        System.out.println("\n");
+        return choice;
+    }
 
   private void offerSelectOption() throws RemoteException, Exception {
-    List<String> options = new LinkedList<>();
+    List<String> options = new LinkedList<String>();
     options.add("Place order");
     options.add("Check availability");
     options.add("Exit.");
@@ -50,8 +65,8 @@ public class Frontend {
         break;
         //check availability
       case 3:
-        STATE = state.STOP;
-        break
+        STATE = STATE.STOP;
+        break;
 
       default:
         break;
@@ -61,7 +76,7 @@ public class Frontend {
   private void availabilityOptions() throws RemoteException, Exception {
     List<String> options = new LinkedList<>();
     options.add("Display 6 month product availabilty");
-    options.add("Check availability of product for specified date")
+    options.add("Check availability of product for specified date");
     options.add("Exit.");
     int choice = chooseOne(options);
     switch (choice)
@@ -122,7 +137,7 @@ public class Frontend {
   }
 
   private void specifyOrder() throws RemoteException, Exception {
-    List<String> options = new LinkedList<>();
+    List<String> options = new LinkedList<String>();
     String order = "" ;
     for(int i = 0 ; i < 3 ; i ++ ){
       System.out.println("specify order as prodcut name, quantity, date");
@@ -139,7 +154,7 @@ public class Frontend {
     return choice;
 }
 
-  public void start() throws Exception
+  public static void start() throws Exception
   {
       //run is true call main options
       while(STATE == State.RUN)
