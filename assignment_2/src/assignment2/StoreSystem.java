@@ -76,7 +76,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
 
   }
 
-  public synchronized void listOrders(String userId) { 
+  public synchronized void listOrders(String userId) throws RemoteException, Exception { 
     try {
     FileReader fileReader = new FileReader("current_orders.txt");
     BufferedReader bufferedReader = new BufferedReader(fileReader);
@@ -97,7 +97,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
     }
   }
 
-  public synchronized void checkProductAvailability(String productName, LocalDate checkDate) {
+  public synchronized void checkProductAvailability(String productName, LocalDate checkDate) throws RemoteException, Exception {
     try {
       LocalDate currentDate = LocalDate.now(); //2017-01-03
       long daysBetweenDates = currentDate.until(checkDate, ChronoUnit.DAYS);
@@ -169,7 +169,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
   }
 
 
-  public synchronized void checkAllProductSixMonthAvailability() {
+  public synchronized void checkAllProductSixMonthAvailability() throws RemoteException, Exception {
     try {
       LocalDate currentDate = LocalDate.now(); //2017-01-03
       LocalDate sixMonthsFromNow = currentDate.plusMonths(6);
@@ -197,7 +197,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
 
   // userId OrderID orderredproduct qauntity date ....
   // 1 35 game boy....
-  public synchronized void cancelOrder(String userId, String orderIdTobeCancelled) {
+  public synchronized void cancelOrder(String userId, String orderIdTobeCancelled) throws RemoteException, Exception {
     try {
       ArrayList<String> ordersNotToBecCancelled = new ArrayList<String>();
 
@@ -234,7 +234,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
   } 
 
 
-  private void confirmOrder(String orderedProduct, String orderedQuantity, String orderDate, String orderTime) {
+  private void confirmOrder(String orderedProduct, String orderedQuantity, String orderDate, String orderTime) throws RemoteException, Exception {
     try {
       FileWriter fileWriter = new FileWriter("current_orders.txt", true);
       // 1 Game Boy 500 12/5/2021 12:00

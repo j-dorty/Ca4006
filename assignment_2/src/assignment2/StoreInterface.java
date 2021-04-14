@@ -12,13 +12,11 @@ import java.util.ArrayList;
 public interface StoreInterface extends Remote
 {
     
-    public void placeOrder throws RemoteException, Exception;
-    public  ArrayList<String> chunkFile(char start , char fin) throws RemoteException, Exception;
-    public String getMeta() throws RemoteException , Exception;
-    public String getFile() throws RemoteException , Exception;
-    public String getChunkName() throws RemoteException , Exception;
-    public void addQueue(char start, char fin) throws RemoteException ,  Exception ;
-    public Queue<String> getQueue() throws RemoteException ,  Exception ;
+    public void placeOrder(String order) throws RemoteException, Exception;
+    public void listOrders(String order) throws RemoteException, Exception;
+    public void checkProductAvailability(String productName, LocalDate checkDate) throws RemoteException, Exception;
+    public void checkAllProductSixMonthAvailability() throws RemoteException, Exception;
+    public void cancelOrder(String userId, String orderIdTobeCancelled) throws RemoteException, Exception;
 
 
 }

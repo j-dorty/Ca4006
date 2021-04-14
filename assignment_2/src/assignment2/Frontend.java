@@ -1,8 +1,11 @@
+package assignment2;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.io.*;
 import java.util.Queue;
@@ -18,9 +21,9 @@ enum State
 
 public class Frontend {
 
-    private Scanner scanner;
-    private StoreInterface store;
-    private State STATE;
+    private static Scanner scanner;
+    private static StoreInterface store;
+    private static State STATE;
   
   public static void main(String[] args) throws RemoteException, 
   NotBoundException, MalformedURLException, ParseException , Exception{
@@ -33,13 +36,13 @@ public class Frontend {
   }
 
   public Frontend(String url) throws NotBoundException, MalformedURLException, RemoteException {
-    this.STATE = State.RUN;
-    this.store = (StoreInterface) Naming.lookup(url);
+    Frontend.STATE = State.RUN;
+    Frontend.store = (StoreInterface) Naming.lookup(url);
     // inventory interface
-    this.scanner = new Scanner(System.in);
+    Frontend.scanner = new Scanner(System.in);
   }
 
-  private int chooseOne(List<String> options)
+  private static int chooseOne(List<String> options)
     {
         for (int i = 0; i < options.size(); i++)
             System.out.println(String.format("%10d. %s", i+1, options.get(i).toString()));
@@ -49,7 +52,7 @@ public class Frontend {
         return choice;
     }
 
-  private void offerSelectOption() throws RemoteException, Exception {
+  private static void offerSelectOption() throws RemoteException, Exception {
     List<String> options = new LinkedList<String>();
     options.add("Place order");
     options.add("Check availability");
@@ -65,7 +68,7 @@ public class Frontend {
         break;
         //check availability
       case 3:
-        STATE = STATE.STOP;
+        STATE = State.STOP;
         break;
 
       default:
@@ -73,7 +76,7 @@ public class Frontend {
     }
   }
 
-  private void availabilityOptions() throws RemoteException, Exception {
+  private static void availabilityOptions() throws RemoteException, Exception {
     List<String> options = new LinkedList<>();
     options.add("Display 6 month product availabilty");
     options.add("Check availability of product for specified date");
@@ -82,11 +85,13 @@ public class Frontend {
     switch (choice)
     {
         case 1:
-          displayAllProductsSixMonthAvailability();
+          store.checkAllProductSixMonthAvailability();  
+        // displayAllProductsSixMonthAvailability();
           break;
 
         case 2:
-          checkProductAvailability();
+        specifyProductAvailability();  
+        // checkProductAvailability();
           break;
 
         case 3:
@@ -98,20 +103,22 @@ public class Frontend {
     }
   }
 
-  private void orderOptions() throws RemoteException, Exception {
+  private static void orderOptions() throws RemoteException, Exception {
     List<String> options = new LinkedList<>();
     options.add("Display all current orders");
     options.add("Cancel an order");
-    options.add("place a new order");
-    options.add("Exit.");
+    options.add("Place a new order");
+    options.add("Exit");
     int choice = chooseOne(options);
     switch (choice)
     {
         case 1:
+          store.listOrders("1");
           // display current orders
           break;
 
         case 2:
+          specifyCancelOrder();
           // cancel order
           break;
         
@@ -128,27 +135,47 @@ public class Frontend {
     }
   }
 
-  private void displayAllProductsSixMonthAvailability() throws RemoteException, Exception {
-    System.out.println("You should be seeing all products availability");
+  private static void specifyProductAvailability() {
+    String product = stringIn();
+    int dayOfMonth = Frontend.scanner.nextInt();
+    int month = Frontend.scanner.nextInt();
+    int year = Frontend.scanner.nextInt();
+
+    LocalDate checkDate = LocalDate.of(year, month, dayOfMonth);
+
+    try {
+      store.checkProductAvailability(product, checkDate);
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
-  private void checkProductAvailability() throws RemoteException, Exception {
-    System.out.println("You should be promted for input to check a products availability on a specified date")
-  }
-
-  private void specifyOrder() throws RemoteException, Exception {
-    List<String> options = new LinkedList<String>();
+  private static void specifyOrder() throws RemoteException, Exception {
     String order = "" ;
     for(int i = 0 ; i < 3 ; i ++ ){
-      System.out.println("specify order as prodcut name, quantity, date");
-      String c =  charIn();
-      a = a + c + " " ;
+      System.out.println("Specify order as product name, quantity, date");
+      String c =  stringIn();
+      order = order + c + " " ;
     }
 
-    ArrayList<String> orderResponse = store.placeOrder(order);
+    store.placeOrder(order);
   }
 
-  private char stringIn(){
+  private static void specifyCancelOrder() {
+    String orderIdToBeCancelled = stringIn();
+    try {
+      store.cancelOrder("1", orderIdToBeCancelled);
+    } catch (RemoteException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    } catch (Exception e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
+  }
+
+  private static String stringIn(){
     String choice = scanner.next();
     System.out.println("\n");
     return choice;
