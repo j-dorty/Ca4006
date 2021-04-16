@@ -6,40 +6,35 @@ import java.rmi.RemoteException;
 import java.rmi.NotBoundException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.io.*;
-import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.List;
 
 
-enum State
-{
-    STOP, RUN
-}
-
 public class Frontend {
 
     private static Scanner scanner;
     private static StoreInterface store;
-    private static State STATE;
   
   public static void main(String[] args) throws RemoteException, 
   NotBoundException, MalformedURLException, ParseException , Exception{
 
     String host = args[0];
     int port = Integer.parseInt(args[1]);
-    Frontend.start();
+
+    String serviceUrl = "rmi://" + host + ":" + port + "/booking";
+    System.out.println(serviceUrl);
+
+    // initialise and start the frontend 
+    Frontend frontend = new Frontend(serviceUrl);
+    frontend.start();
 
     System.out.print("Finished");
   }
 
   public Frontend(String url) throws NotBoundException, MalformedURLException, RemoteException {
-    Frontend.STATE = State.RUN;
-    Frontend.store = (StoreInterface) Naming.lookup(url);
-    // inventory interface
-    Frontend.scanner = new Scanner(System.in);
+    this.store = (StoreInterface) Naming.lookup(url);
+    this.scanner = new Scanner(System.in);
   }
 
   private static int chooseOne(List<String> options)
@@ -68,7 +63,6 @@ public class Frontend {
         break;
         //check availability
       case 3:
-        STATE = State.STOP;
         break;
 
       default:
@@ -95,7 +89,6 @@ public class Frontend {
           break;
 
         case 3:
-          STATE = State.STOP;
           break;
 
         default:
@@ -127,7 +120,6 @@ public class Frontend {
           break;
 
         case 4:
-          STATE = State.STOP;
           break;
 
         default:
@@ -137,9 +129,9 @@ public class Frontend {
 
   private static void specifyProductAvailability() {
     String product = stringIn();
-    int dayOfMonth = Frontend.scanner.nextInt();
-    int month = Frontend.scanner.nextInt();
-    int year = Frontend.scanner.nextInt();
+    int dayOfMonth = scanner.nextInt();
+    int month = scanner.nextInt();
+    int year = scanner.nextInt();
 
     LocalDate checkDate = LocalDate.of(year, month, dayOfMonth);
 
@@ -181,10 +173,10 @@ public class Frontend {
     return choice;
 }
 
-  public static void start() throws Exception
+  public void start() throws Exception
   {
       //run is true call main options
-      while(STATE == State.RUN)
+      while(true)
       {
           try
           {

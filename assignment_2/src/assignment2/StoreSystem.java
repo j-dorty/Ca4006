@@ -22,22 +22,13 @@ import java.io.File ;
 
 public class StoreSystem extends UnicastRemoteObject implements StoreInterface, Serializable {
   
-  String ma = "";
   private static final long serialVersionUID = 24L;
-  private String fileName = "store_inventory.txt" ;
-  transient BufferedReader br ;
-  int ran = 1 ;
-  File file ;
-  char start ;
-  char end ;
-
 
 
   public StoreSystem() throws RemoteException, Exception {
     super();
-    file = new File(fileName);
   }
-
+  // checks if order can be completed 
   public synchronized void placeOrder(String order) throws RemoteException, Exception {
     // order = "Game Boy 500 12/05/2021 12:00"
     String[] orderAsList = order.split(" "); // ["game", "boy", "500",...]
@@ -55,14 +46,14 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
     // Jolt Cola 4000 21 3445
 
     String line = bufferedReader.readLine();
-    try {
+    try { // list through inventory to find current quantity of product
       while(line != null) {
         String[] inventoryEntry = line.split(" ");
 
         String inventoryProduct = String.join(" ", Arrays.copyOfRange(inventoryEntry, 0, inventoryEntry.length - 3));
         if (orderedProduct.equals(inventoryProduct)) {
           if (orderCanBeCompleted(orderedProduct, orderedQuantity, orderDate, orderTime)) {
-            confirmOrder(orderedProduct, orderedQuantity, orderDate, orderTime);
+            confirmOrder(orderedProduct, orderedQuantity, orderDate, orderTime); // if order cna be fulfilled confirm order
           }
           break;
         }
@@ -75,14 +66,14 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
     bufferedReader.close();
 
   }
-
+  // list all orders for a current user
   public synchronized void listOrders(String userId) throws RemoteException, Exception { 
     try {
     FileReader fileReader = new FileReader("current_orders.txt");
     BufferedReader bufferedReader = new BufferedReader(fileReader);
     
     String currentOrder = bufferedReader.readLine();
-
+        // list rhoguh all orders prtinint each one that matches the current user
       while(currentOrder != null) {
         String[] currentOrderList = currentOrder.split(" ");
 
@@ -96,7 +87,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
       e.printStackTrace();
     }
   }
-
+  // checks the quantuty of a profdcut on a given date minus the orders that occur by that date
   public synchronized void checkProductAvailability(String productName, LocalDate checkDate) throws RemoteException, Exception {
     try {
       LocalDate currentDate = LocalDate.now(); //2017-01-03
@@ -168,7 +159,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
 
   }
 
-
+  // checks the availabiltiy of all products for six months from now
   public synchronized void checkAllProductSixMonthAvailability() throws RemoteException, Exception {
     try {
       LocalDate currentDate = LocalDate.now(); //2017-01-03
@@ -218,7 +209,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
 
       }
 
-      FileWriter fileWriter = new FileWriter("filepath.txt", false);
+      FileWriter fileWriter = new FileWriter("current_orders.txt", false);
 
       for(String order : ordersNotToBecCancelled) {
 
@@ -233,7 +224,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
 
   } 
 
-
+  // if the order can be completed wrtie the order to the orderts file to confirm
   private void confirmOrder(String orderedProduct, String orderedQuantity, String orderDate, String orderTime) throws RemoteException, Exception {
     try {
       FileWriter fileWriter = new FileWriter("current_orders.txt", true);
@@ -245,7 +236,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
         e.printStackTrace();
     }
   }
-
+  // check if the order can be fulfilled bases on the current quanity
   private boolean orderCanBeCompleted(String orderedProduct, String orderedQuantity, String orderDate, String orderTime) {
     return true;
   }

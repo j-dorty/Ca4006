@@ -11,10 +11,11 @@ import java.net.MalformedURLException;
 
 public class Backend {
   
+  // register the backend on the rmi registry with given port and host
   public static void main(String[] args) throws AlreadyBoundException, RemoteException, MalformedURLException, NotBoundException , Exception {
     String host = args[0];
     int port = Integer.parseInt(args[1]);
-    String serviceName = "rmi://" + host + ":" + port + "/think of something to call this";
+    String serviceName = "rmi://" + host + ":" + port + "/booking"; 
     System.out.println("Creating registry on " + serviceName);
     Registry registry = LocateRegistry.createRegistry(port);
     System.out.println(port);
