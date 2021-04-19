@@ -19,6 +19,7 @@ import java.util.*;
 import java.time.LocalDate;  
 import java.util.Queue;
 import java.io.File ;
+import java.util.Random;
 
 public class StoreSystem extends UnicastRemoteObject implements StoreInterface, Serializable {
   
@@ -29,13 +30,10 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
     super();
   }
   // checks if order can be completed 
-  public synchronized void placeOrder(String order) throws RemoteException, Exception {
+  public synchronized void placeOrder(String userId, String order, String quantity, LocalDate orderDate) throws RemoteException, Exception {
     // order = "Game Boy 500 12/05/2021 12:00"
-    String[] orderAsList = order.split(" "); // ["game", "boy", "500",...]
-    String orderedProduct = String.join(" ", Arrays.copyOfRange(orderAsList, 0, orderAsList.length - 3)); //order[:-3]
-    String orderedQuantity = orderAsList[orderAsList.length - 3]; //.get(orderAsList.length - 3);
-    String orderDate = orderAsList[orderAsList.length - 2];
-    String orderTime = orderAsList[orderAsList.length - 1]; 
+    String orderedProduct = order; //order[:-3]
+    String orderedQuantity = quantity; //.get(orderAsList.length - 3);
     FileReader fileReader = new FileReader("store_inventory.txt");
     BufferedReader bufferedReader = new BufferedReader(fileReader);
     // Scanner scan = new Scanner("store_inventory.txt");
@@ -52,8 +50,8 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
 
         String inventoryProduct = String.join(" ", Arrays.copyOfRange(inventoryEntry, 0, inventoryEntry.length - 3));
         if (orderedProduct.equals(inventoryProduct)) {
-          if (orderCanBeCompleted(orderedProduct, orderedQuantity, orderDate, orderTime)) {
-            confirmOrder(orderedProduct, orderedQuantity, orderDate, orderTime); // if order cna be fulfilled confirm order
+          if (orderCanBeCompleted(userId, orderedProduct, orderedQuantity, orderDate)) {
+            confirmOrder(userId, orderedProduct, orderedQuantity, orderDate); // if order cna be fulfilled confirm order
           }
           break;
         }
@@ -81,6 +79,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
         if (customerId.equals(userId)) {
           System.out.println(currentOrder);
         }
+        currentOrder = bufferedReader.readLine();
       }
       bufferedReader.close();
     } catch(IOException e) {
@@ -110,6 +109,8 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
           productInfo = inventoryEntry;
           break;
         }
+
+        line = bufferedReader.readLine();
       }
 
       bufferedReader.close();
@@ -138,8 +139,8 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
       while(currentOrder != null) {
         String[] currentOrderList = currentOrder.split(" ");
 
-        String orderedProduct = String.join(" ", Arrays.copyOfRange(currentOrderList, 1, currentOrderList.length - 3));
-        String orderedQuanity = currentOrderList[-2];
+        String orderedProduct = String.join(" ", Arrays.copyOfRange(currentOrderList, 2, currentOrderList.length - 3));
+        String orderedQuanity = currentOrderList[currentOrderList.length -2];
         if(orderedProduct.equals(productName)) {
           totalOrderedAmount += Integer.parseInt(orderedQuanity);
         }
@@ -206,6 +207,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
         if(!(customerId.equals(userId) && orderId.equals(orderIdTobeCancelled))) {
           ordersNotToBecCancelled.add(currentOrder);
         }
+        currentOrder = bufferedReader.readLine();
 
       }
 
@@ -213,7 +215,7 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
 
       for(String order : ordersNotToBecCancelled) {
 
-        fileWriter.write(order);
+        fileWriter.write(order + "\n");
       }
       fileWriter.close();
       bufferedReader.close();
@@ -225,19 +227,20 @@ public class StoreSystem extends UnicastRemoteObject implements StoreInterface, 
   } 
 
   // if the order can be completed wrtie the order to the orderts file to confirm
-  private void confirmOrder(String orderedProduct, String orderedQuantity, String orderDate, String orderTime) throws RemoteException, Exception {
+  private void confirmOrder(String userId, String orderedProduct, String orderedQuantity, LocalDate orderDate) throws RemoteException, Exception {
     try {
+      Random r = new Random();
       FileWriter fileWriter = new FileWriter("current_orders.txt", true);
       // 1 Game Boy 500 12/5/2021 12:00
-      fileWriter.write("1 " + orderedProduct + " " + orderedQuantity + " " + orderDate + " " + orderTime);
+      fileWriter.write(userId + " " + r.nextInt(10000) + " " + orderedProduct + " " + orderedQuantity + " " + orderDate + " \n");
       fileWriter.close();
-      System.out.println("Order Confirmed for " + orderedQuantity + " " + orderedProduct + "(s)" + " for " + orderDate + " " + orderTime);
+      System.out.println("Order Confirmed for " + orderedQuantity + " " + orderedProduct + "(s)" + " for " + orderDate + " \n");
       } catch (IOException e) {
         e.printStackTrace();
     }
   }
   // check if the order can be fulfilled bases on the current quanity
-  private boolean orderCanBeCompleted(String orderedProduct, String orderedQuantity, String orderDate, String orderTime) {
+  private boolean orderCanBeCompleted(String userId, String orderedProduct, String orderedQuantity, LocalDate orderDate) {
     return true;
   }
 

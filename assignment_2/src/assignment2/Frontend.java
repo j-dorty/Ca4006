@@ -49,7 +49,7 @@ public class Frontend {
 
   private static void offerSelectOption() throws RemoteException, Exception {
     List<String> options = new LinkedList<String>();
-    options.add("Place order");
+    options.add("Orders");
     options.add("Check availability");
     options.add("Exit.");
     int choice = chooseOne(options);
@@ -63,6 +63,7 @@ public class Frontend {
         break;
         //check availability
       case 3:
+        System.exit(0);
         break;
 
       default:
@@ -89,6 +90,7 @@ public class Frontend {
           break;
 
         case 3:
+          System.exit(0);
           break;
 
         default:
@@ -120,6 +122,7 @@ public class Frontend {
           break;
 
         case 4:
+          System.exit(0);
           break;
 
         default:
@@ -128,9 +131,16 @@ public class Frontend {
   }
 
   private static void specifyProductAvailability() {
-    String product = stringIn();
+    System.out.println("Enter the name of the product you want to check the availability of:");
+    scanner.nextLine(); // consume \n
+    String product = scanner.nextLine();
+    System.out.println(product);
+    System.out.println("Enter the date as dd/mm/yyyy");
+    System.out.println("Enter the day:");
     int dayOfMonth = scanner.nextInt();
+    System.out.println("Enter the month:");
     int month = scanner.nextInt();
+    System.out.println("Enter the year");
     int year = scanner.nextInt();
 
     LocalDate checkDate = LocalDate.of(year, month, dayOfMonth);
@@ -144,18 +154,29 @@ public class Frontend {
   }
 
   private static void specifyOrder() throws RemoteException, Exception {
-    String order = "" ;
-    for(int i = 0 ; i < 3 ; i ++ ){
-      System.out.println("Specify order as product name, quantity, date");
-      String c =  stringIn();
-      order = order + c + " " ;
-    }
+    scanner.nextLine(); // consume new line
+    System.out.println("Enter the name of the prodcut you would like to order:");
+    String order = scanner.nextLine();
+    System.out.println("Enter the quantity of the prodcut for the order:");
+    String quanity = scanner.nextLine();
+    System.out.println("Enter the date for the order as dd/mm/yyyy");
+    System.out.println("Enter the day:");
+    int dayOfMonth = scanner.nextInt();
+    System.out.println("Enter the month:");
+    int month = scanner.nextInt();
+    System.out.println("Enter the year");
+    int year = scanner.nextInt();
 
-    store.placeOrder(order);
+    LocalDate orderDate = LocalDate.of(year, month, dayOfMonth);
+    
+
+    store.placeOrder("1", order, quanity, orderDate);
   }
 
   private static void specifyCancelOrder() {
-    String orderIdToBeCancelled = stringIn();
+    System.out.println("Please enter the ID number of the order you would like to cancel:");
+    scanner.nextLine();
+    String orderIdToBeCancelled = scanner.nextLine();
     try {
       store.cancelOrder("1", orderIdToBeCancelled);
     } catch (RemoteException e) {
